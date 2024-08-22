@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Car Price Predictor</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+    <style>
+        .prediction-text {
+            font-size: 2em; /* Increase font size */
+            font-weight: bold; /* Make text bold */
+            color: #333; /* Adjust color if needed */
+        }
+    </style>
+    <script>
+        // List of companies and models
+        const companyModelsList = [
+            { company: "Hyundai", models: ['Hyundai Santro Xing', 'Hyundai Grand i10', 'Hyundai Eon', 'Hyundai Elite i20', 'Hyundai i20 Sportz', 'Hyundai i20 Magna', 'Hyundai Verna Transform', 'Hyundai i10 Magna', 'Hyundai Verna Fluidic', 'Hyundai i20 Asta', 'Hyundai i10 Sportz', 'Hyundai Eon Era', 'Hyundai i20', 'Hyundai Fluidic Verna', 'Hyundai Creta 1.6', 'Hyundai i20 Active', 'Hyundai Eon Sportz', 'Hyundai Accent GLX', 'Hyundai Elantra SX', 'Hyundai i10', 'Hyundai Accent', 'Hyundai Verna', 'Hyundai Verna 1.4', 'Hyundai Sonata Transform', 'Hyundai Verna 1.6', 'Hyundai Xcent Base', 'Hyundai Accent Executive', 'Hyundai Eon Magna', 'Hyundai Eon D', 'Hyundai Getz Prime', 'Hyundai Santro', 'Hyundai Accent GLE', 'Hyundai Verna VGT', 'Hyundai i10 Era', 'Hyundai Xcent SX', 'Hyundai Elantra 1.8', 'Hyundai Santro AE', 'Hyundai Getz GLE', 'Hyundai Creta', 'Hyundai i20 Select', 'Hyundai Getz'] },
+            { company: "Mahindra", models: ['Mahindra Jeep CL550', 'Mahindra Scorpio SLE', 'Mahindra Scorpio S10', 'Mahindra Bolero DI', 'Mahindra Scorpio S4', 'Mahindra Scorpio VLX', 'Mahindra Quanto C8', 'Mahindra XUV500 W8', 'Mahindra Scorpio', 'Mahindra XUV500', 'Mahindra Scorpio SLX', 'Mahindra Xylo E4', 'Mahindra Jeep MM', 'Mahindra Bolero SLE', 'Mahindra Thar CRDe', 'Mahindra TUV300 T4', 'Mahindra Scorpio 2.6', 'Mahindra KUV100 K8', 'Mahindra Bolero Power', 'Mahindra Scorpio W', 'Mahindra TUV300 T8', 'Mahindra Logan Diesel', 'Mahindra XUV500 W6', 'Mahindra Scorpio Vlx', 'Mahindra XUV500 W10', 'Mahindra Xylo E8', 'Mahindra KUV100', 'Mahindra Scorpio LX', 'Mahindra Xylo D2', 'Mahindra Logan', 'Mahindra Quanto C4'] },
+            { company: "Ford", models: ['Ford EcoSport Titanium', 'Ford Figo', 'Ford EcoSport Ambiente', 'Ford EcoSport', 'Ford Figo Diesel', 'Ford EcoSport Trend', 'Ford Fiesta', 'Ford Ikon 1.3', 'Ford Figo Duratorq', 'Ford Figo Petrol', 'Ford Fiesta SXi', 'Ford Ikon 1.6', 'Ford Fusion 1.4', 'Ford Endeavor 4x4'] },
+            { company: "Maruti", models: ['Maruti Suzuki Alto', 'Maruti Suzuki Stingray', 'Maruti Suzuki Vitara', 'Maruti Suzuki Swift', 'Maruti Suzuki Wagon', 'Maruti Suzuki Baleno', 'Maruti Suzuki Dzire', 'Maruti Suzuki SX4', 'Maruti Suzuki A', 'Maruti Suzuki Ertiga', 'Maruti Suzuki Eeco', 'Maruti Suzuki Esteem', 'Maruti Suzuki Ritz', 'Maruti Suzuki Ciaz', 'Maruti Suzuki Zen', 'Maruti Suzuki Maruti', 'Maruti Suzuki Versa', 'Maruti Suzuki Omni', 'Maruti Suzuki 800', 'Maruti Suzuki Estilo', 'Maruti Suzuki Celerio', 'Maruti Suzuki S'] },
+            { company: "Skoda", models: ['Skoda Fabia Classic', 'Skoda Yeti Ambition', 'Skoda Fabia 1.2L', 'Skoda Laura', 'Skoda Rapid Elegance', 'Skoda Superb 1.8', 'Skoda Octavia Classic', 'Skoda Fabia'] },
+            { company: "Audi", models: ['Audi A8', 'Audi Q7', 'Audi A4 1.8', 'Audi A4 2.0', 'Audi Q3 2.0', 'Audi A6 2.0', 'Audi Q5 2.0', 'Audi A3 Cabriolet'] },
+            { company: "Toyota", models: ['Toyota Innova 2.0', 'Toyota Corolla Altis', 'Toyota Etios GD', 'Toyota Etios Liva', 'Toyota Innova 2.5', 'Toyota Etios', 'Toyota Fortuner', 'Toyota Fortuner 3.0', 'Toyota Corolla H2', 'Toyota Corolla', 'Toyota Etios G', 'Toyota Qualis'] },
+            { company: "Renault", models: ['Renault Lodgy 85', 'Renault Duster 110', 'Renault Duster 85', 'Renault Duster 110PS', 'Renault Duster', 'Renault Kwid', 'Renault Scala RxL', 'Renault Kwid RXT', 'Renault Kwid 1.0', 'Renault Duster 85PS', 'Renault Duster RxL'] },
+            { company: "Honda", models: ['Honda City 1.5', 'Honda Amaze', 'Honda Amaze 1.5', 'Honda City', 'Honda City ZX', 'Honda Brio', 'Honda Amaze 1.2', 'Honda City VX', 'Honda Jazz VX', 'Honda Accord', 'Honda Mobilio', 'Honda Jazz S', 'Honda Brio V', 'Honda City SV', 'Honda Mobilio S', 'Honda Brio VX', 'Honda WR V'] },
+            { company: "Datsun", models: ['Datsun Redi GO', 'Datsun GO T', 'Datsun Go Plus'] },
+            { company: "Mitsubishi", models: ['Mitsubishi Pajero Sport', 'Mitsubishi Lancer 1.8'] },
+            { company: "Tata", models: ['Tata Indigo eCS', 'Tata Indica V2', 'Tata Indigo CS', 'Tata Nano Cx', 'Tata Sumo Victa', 'Tata Aria Pleasure', 'Tata Sumo Gold', 'Tata Manza Aura', 'Tata Vista Quadrajet', 'Tata Indigo LX', 'Tata Manza ELAN', 'Tata Indigo LS', 'Tata Nano GenX', 'Tata Zest XE', 'Tata Tigor Revotron', 'Tata Indica', 'Tata Nano Lx', 'Tata Nano', 'Tata Zest Quadrajet', 'Tata Indigo Marina', 'Tata Nano LX', 'Tata Manza Aqua', 'Tata Venture EX', 'Tata Indica eV2', 'Tata Tiago Revotron', 'Tata Tiago Revotorq', 'Tata Sumo Grande', 'Tata Bolt XM', 'Tata Manza', 'Tata Zest XM'] },
+            { company: "Volkswagen", models: ['Volkswagen Polo Highline', 'Volkswagen Vento Highline', 'Volkswagen Jetta Highline', 'Volkswagen Polo Comfortline', 'Volkswagen Polo', 'Volkswagen Passat Diesel', 'Volkswagen Vento Konekt', 'Volkswagen Polo Trendline', 'Volkswagen Vento Comfortline', 'Volkswagen Jetta Comfortline', 'Volkswagen Polo Highline1.2L'] },
+            { company: "Chevrolet", models: ['Chevrolet Spark LS', 'Chevrolet Beat LT', 'Chevrolet Spark', 'Chevrolet Beat', 'Chevrolet Spark LT', 'Chevrolet Beat LS', 'Chevrolet Tavera Neo', 'Chevrolet Enjoy 1.4', 'Chevrolet Tavera'] },
+            { company: "Mini", models: ['Mini Cooper S', 'Mini Cooper Countryman', 'Mini Cooper'] },
+            { company: "BMW", models: ['BMW 3 Series', 'BMW X1', 'BMW X3', 'BMW 5 Series', 'BMW X5', 'BMW Z4', 'BMW 7 Series'] },
+            { company: "Nissan", models: ['Nissan Sunny', 'Nissan Micra', 'Nissan Altima', 'Nissan X-Trail', 'Nissan GT-R'] },
+            { company: "Hindustan", models: ['Hindustan Ambassador', 'Hindustan Contessa'] },
+            { company: "Fiat", models: ['Fiat Punto', 'Fiat Linea', 'Fiat Abarth'] },
+            { company: "Jaguar", models: ['Jaguar XE', 'Jaguar XF', 'Jaguar XJ'] }
+        ];
+
+        function updateModels() {
+            const companySelect = document.getElementById("company");
+            const modelSelect = document.getElementById("model");
+            const selectedCompany = companySelect.value;
+
+            // Clear previous models
+            modelSelect.innerHTML = "";
+
+            // Find the selected company and populate the models
+            const selectedCompanyData = companyModelsList.find(item => item.company === selectedCompany);
+            if (selectedCompanyData) {
+                selectedCompanyData.models.forEach(function(model) {
+                    const option = document.createElement("option");
+                    option.value = model;
+                    option.textContent = model;
+                    modelSelect.appendChild(option);
+                });
+            }
+
+            // Set the default model for Mahindra
+            if (selectedCompany === "Mahindra") {
+                modelSelect.value = "Mahindra Scorpio S10";
+            }
+        }
+
+        async function predictPrice(event) {
+            event.preventDefault(); // Prevent the form from submitting traditionally
+
+            const company = document.getElementById("company").value;
+            const model = document.getElementById("model").value;
+            const year = document.getElementById("year").value;
+            const kmsDriven = document.getElementById("kilometers").value;
+            const fuelType = document.getElementById("fuel").value;
+
+            const data = {
+                name: model,
+                company: company,
+                year: parseInt(year),
+                kms_driven: parseInt(kmsDriven),
+                fuel_type: fuelType
+            };
+
+            try {
+                const response = await fetch('/predict_api', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ data: data })
+                });
+
+                const result = await response.json();
+                document.getElementById("prediction").textContent = `Predicted Price: ₹${result.toFixed(2)}`;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        window.onload = updateModels; // Call updateModels on page load
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="card mt-50" style="width: 100%; height: 100%">
+                <div class="card-header" style="text-align: center">
+                    <h1>Welcome to Car Price Predictor</h1>
+                    <img src="static/images/car3.png" alt="Logo" class="logo">
+                </div>
+                <div class="card-body">
+                    <div class="col-12" style="text-align: center">
+                        <h5>This app predicts the price of a car you want to sell. Try filling the details below: </h5>
+                    </div>
+                    <br>
+                    <form method="post" accept-charset="utf-8" name="Modelform" onsubmit="predictPrice(event)">
+                        <div class="form-group">
+                            <label for="company">Select the company:</label>
+                            <select class="selectpicker form-control" id="company" name="company" required="1" onchange="updateModels()">
+                                <option value="Hyundai">Hyundai</option>
+                                <option value="Mahindra">Mahindra</option>
+                                <option value="Ford">Ford</option>
+                                <option value="Maruti">Maruti</option>
+                                <option value="Skoda">Skoda</option>
+                                <option value="Audi">Audi</option>
+                                <option value="Toyota">Toyota</option>
+                                <option value="Renault">Renault</option>
+                                <option value="Honda">Honda</option>
+                                <option value="Datsun">Datsun</option>
+                                <option value="Mitsubishi">Mitsubishi</option>
+                                <option value="Tata">Tata</option>
+                                <option value="Volkswagen">Volkswagen</option>
+                                <option value="Chevrolet">Chevrolet</option>
+                                <option value="Mini">Mini</option>
+                                <option value="BMW">BMW</option>
+                                <option value="Nissan">Nissan</option>
+                                <option value="Hindustan">Hindustan</option>
+                                <option value="Fiat">Fiat</option>
+                                <option value="Force">Force</option>
+                                <option value="Mercedes">Mercedes</option>
+                                <option value="Land">Land</option>
+                                <option value="Jaguar">Jaguar</option>
+                                <option value="Jeep">Jeep</option>
+                                <option value="Volvo">Volvo</option>
+                            </select>
+                        </div>
+                        <br><br>
+                        <div class="form-group">
+                            <label for="model">Select the model:</label>
+                            <select class="selectpicker form-control" id="model" name="model" required="1">
+                                <!-- Model options will be populated based on the selected company -->
+                            </select>
+                        </div>
+                        <br><br>
+                        <div class="form-group">
+                            <label for="year">Select year of purchase:</label>
+                            <select class="selectpicker form-control" id="year" name="year" required="1">
+                                <option value="2023">2019</option>
+                                <option value="2022">2018</option>
+                                <option value="2021">2017</option>
+                                <option value="2020">2016</option>
+                                <option value="2019">2015</option>
+                                <option value="2019">2014</option>
+                                <option value="2019">2013</option>
+                                <option value="2019">2012</option>
+                                <option value="2019">2011</option>
+                                <option value="2019">2010</option>
+                                <option value="2019">2009</option>
+                                <option value="2019">2008</option>
+                                <option value="2019">2007</option>
+                                <option value="2019">2006</option>
+                                <option value="2019">2005</option>
+                                <option value="2019">2004</option>
+                                <option value="2019">2003</option>
+                                <option value="2019">2002</option>
+                                <option value="2019">2001</option>
+                                <option value="2019">2000</option> 
+                                <option value="1995" selected>2014</option> <!-- Default to 2014 -->
+                            </select>
+                        </div>
+                        <br><br>
+                        <div class="form-group">
+                            <label for="fuel">Select fuel type:</label>
+                            <select class="selectpicker form-control" id="fuel" name="fuel" required="1">
+                                <option value="Petrol">Petrol</option>
+                                <option value="Diesel" selected>Diesel</option> <!-- Default to Diesel -->
+                            </select>
+                        </div>
+                        <br><br>
+                        <div class="form-group">
+                            <label for="kilometers">Enter the number of kilometers that the car has travelled:</label>
+                            <input type="number" class="form-control" id="kilometers" name="kilometers" placeholder="Enter the kilometres driven" value="25000"> <!-- Default to 25,000 km -->
+                        </div>
+                        <br><br>
+                        <div class="form-group">
+                            <button class="btn btn-primary form-control" type="submit">Predict Price</button>
+                        </div>
+                    </form>
+                    <br>
+                    <div class="row">
+                        <div class="col-12" style="text-align: center">
+                            <h4><span id="prediction" class="prediction-text"></span></h4> <!-- Area to display the prediction -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- background image -->
+    <div class="background-image">
+        <img src="static/images/road-marking.jpg" alt="Background Image">
+    </div>
+</body>
+</html>
