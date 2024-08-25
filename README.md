@@ -29,17 +29,8 @@ A folder named scripts/ containing any additional Python scripts used for data p
 
 # Contributions are welcome! If you'd like to contribute to this project, please follow these steps:
 
-1.Fork the repository.
-2.Create a new branch (git checkout -b feature-branch).
-3.Make your changes and commit them (git commit -am 'Add new feature').
-4.Push to the branch (git push origin feature-branch).
-5.Create a pull request.
-6.License
-
-# This project is licensed under the MIT License. See the LICENSE file for details.
-
-Contact
-If you have any questions or need further assistance, feel free to reach out:
-
-Email:
-GitHub Issues: Submit an issue
+- Fork the repository.
+- Create a new branch (git checkout -b feature-branch).
+- Make your changes and commit them (git commit -am 'Add new feature').
+- Push to the branch (git push origin feature-branch).
+- Create a pull request.
