@@ -1,5 +1,6 @@
 # Car Price Predictor
 Welcome to the Car Price Prediction project! This repository contains the code and resources for a machine learning application designed to predict car prices based on various features. Below you'll find an overview of the project, its components, and how to get started.
+![](https://github.com/pradyumna-burly/car_price_predictor/blob/main/static/images/web%20interface.png)
 
 # Project Overview
 The Car Price Prediction project leverages a linear regression model to estimate the price of cars. It includes a web interface for users to input car features and receive price predictions. The model has been trained using historical car data and is packaged for deployment in a Python web application.
@@ -24,8 +25,9 @@ cleaned_data.csv: The cleaned dataset used for training the linear regression mo
 # Notebook:
 notebook.ipynb: A Jupyter Notebook that details the data analysis and model training process. This notebook includes code for data preprocessing, feature selection, model training, and evaluation.
 
-# Scripts:
-A folder named scripts/ containing any additional Python scripts used for data preprocessing, feature engineering, or other tasks related to model development.
+# Final Outcome:
+Now our model is fully ready to display predicted price. Based on the features selected by the user, the regression model make a API call to the pickle file of the model and in return the file gives the predicted output, the same will be displayed on the html webpage. Here is a small demo
+![](https://github.com/pradyumna-burly/car_price_predictor/blob/main/static/images/price_prediction.png)
 
 # Contributions are welcome! If you'd like to contribute to this project, please follow these steps:
 
