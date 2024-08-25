@@ -34,12 +34,3 @@ A folder named scripts/ containing any additional Python scripts used for data p
 3.Make your changes and commit them (git commit -am 'Add new feature').
 4.Push to the branch (git push origin feature-branch).
 5.Create a pull request.
-6.License
-
-# This project is licensed under the MIT License. See the LICENSE file for details.
-
-Contact
-If you have any questions or need further assistance, feel free to reach out:
-
-Email:
-GitHub Issues: Submit an issue
